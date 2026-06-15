@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+```
+<div class="card shadow">
+
+    <div class="card-body">
+
+        <h3 class="mb-4">
+            Edit Bug
+        </h3>
+
+        <form method="POST">
+
+            <div class="mb-3">
+
+                <label class="form-label">
+                    Bug Title
+                </label>
+
+                <input
+                    type="text"
+                    name="title"
+                    class="form-control"
+                    value="{{ bug.title }}"
+                    required
+                >
+
+            </div>
+
+            <div class="mb-3">
+
+                <label class="form-label">
+                    Description
+                </label>
+
+                <textarea
+                    name="description"
+                    class="form-control"
+                    rows="4"
+                    required>{{ bug.description }}</textarea>
+
+            </div>
+
+            <div class="mb-3">
+
+                <label class="form-label">
+                    Priority
+                </label>
+
+                <select
+                    name="priority"
+                    class="form-select"
+                    required>
+
+                    <option value="Low"
+                        {% if bug.priority == "Low" %}
+                        selected
+                        {% endif %}>
+                        Low
+                    </option>
+
+                    <option value="Medium"
+                        {% if bug.priority == "Medium" %}
+                        selected
+                        {% endif %}>
+                        Medium
+                    </option>
+
+                    <option value="High"
+                        {% if bug.priority == "High" %}
+                        selected
+                        {% endif %}>
+                        High
+                    </option>
+
+                    <option value="Critical"
+                        {% if bug.priority == "Critical" %}
+                        selected
+                        {% endif %}>
+                        Critical
+                    </option>
+
+                </select>
+
+            </div>
+
+            <div class="mb-3">
+
+                <label class="form-label">
+                    Bug Source
+                </label>
+
+                <select
+                    name="bug_source"
+                    class="form-select"
+                    required>
+
+                    <option value="Customer"
+                        {% if bug.bug_source == "Customer" %}
+                        selected
+                        {% endif %}>
+                        Customer
+                    </option>
+
+                    <option value="Testing Team"
+                        {% if bug.bug_source == "Testing Team" %}
+                        selected
+                        {% endif %}>
+                        Testing Team
+                    </option>
+
+                    <option value="Admin"
+                        {% if bug.bug_source == "Admin" %}
+                        selected
+                        {% endif %}>
+                        Admin
+                    </option>
+
+                </select>
+
+            </div>
+
+            <button
+                type="submit"
+                class="btn btn-success">
+
+                Update Bug
+
+            </button>
+
+            <a href="/dashboard"
+               class="btn btn-secondary">
+
+                Cancel
+
+            </a>
+
+        </form>
+
+    </div>
+
+</div>
+```
+
+</div>
+
+{% endblock %}

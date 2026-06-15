@@ -1,0 +1,316 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+
+<h2>Dashboard</h2>
+
+{% if session['role']|lower in ['tester', 'admin'] %}
+<a href="/create_bug" class="btn btn-primary">
+    Create Bug
+</a>
+{% endif %}
+
+</div>
+
+<!-- ADMIN ANALYTICS -->
+
+{% if session['role']|lower == 'admin' %}
+
+<div class="row mb-4">
+
+
+<div class="col-md-2">
+    <div class="card text-center bg-primary text-white">
+        <div class="card-body">
+            <h5>Total</h5>
+            <h3>{{ total_bugs }}</h3>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-2">
+    <div class="card text-center bg-warning">
+        <div class="card-body">
+            <h5>Open</h5>
+            <h3>{{ open_bugs }}</h3>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-2">
+    <div class="card text-center bg-info text-white">
+        <div class="card-body">
+            <h5>Progress</h5>
+            <h3>{{ in_progress_bugs }}</h3>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-2">
+    <div class="card text-center bg-secondary text-white">
+        <div class="card-body">
+            <h5>Resolved</h5>
+            <h3>{{ resolved_bugs }}</h3>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-2">
+    <div class="card text-center bg-success text-white">
+        <div class="card-body">
+            <h5>Closed</h5>
+            <h3>{{ closed_bugs }}</h3>
+        </div>
+    </div>
+</div>
+
+
+</div>
+
+{% endif %}
+
+<div class="card shadow">
+
+
+<div class="card-body">
+
+    <h4 class="mb-4">All Bugs</h4>
+
+    <table class="table table-bordered table-hover align-middle">
+
+        <thead class="table-dark">
+
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Source</th>
+                <th>Status</th>
+                <th>Priority</th>
+                <th>Assigned To</th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {% for bug in bugs %}
+
+            <tr>
+
+                <td>{{ loop.index }}</td>
+
+                <td>{{ bug.title }}</td>
+
+                <td>
+    {{ bug.description }}
+
+    {% if bug.comments %}
+        <hr>
+
+        {% for comment in bug.comments %}
+        <div class="alert alert-light p-1 mt-1">
+            {{ comment.comment }}
+        </div>
+        {% endfor %}
+    {% endif %}
+</td>
+
+                <td>{{ bug.bug_source }}</td>
+
+                <td>
+
+                    {% if bug.status|lower == 'open' %}
+
+<span class="badge bg-warning text-dark">
+    Open
+</span>
+
+{% elif bug.status|lower == 'in progress' %}
+
+<span class="badge bg-primary">
+    In Progress
+</span>
+
+{% elif bug.status|lower == 'resolved' %}
+
+<span class="badge bg-info text-dark">
+    Resolved
+</span>
+
+{% elif bug.status|lower == 'closed' %}
+
+<span class="badge bg-success">
+    Closed
+</span>
+
+{% elif bug.status|lower == 'deleted' %}
+
+<span class="badge bg-danger">
+    Deleted
+</span>
+
+{% endif %}
+                </td>
+
+                <td>{{ bug.priority }}</td>
+
+                <td>
+
+                    {% if bug.assigned_to %}
+                        {{ bug.assigned_to.username }}
+                    {% else %}
+                        Not Assigned
+                    {% endif %}
+
+                </td>
+
+                <td>
+                    {{ bug.created_at.strftime('%d-%m-%Y') }}
+                </td>
+
+                <td>
+
+                    {% set role = session['role']|lower %}
+
+                    <!-- ADMIN -->
+
+                    {% if role == 'admin' %}
+
+                    <a href="/edit_bug/{{ bug.id }}"
+                       class="btn btn-primary btn-sm mb-1">
+                        Edit
+                    </a>
+
+                    <a href="/delete_bug/{{ bug.id }}"
+                       class="btn btn-danger btn-sm mb-1">
+                        Delete
+                    </a>
+
+                    <form method="POST"
+                          action="/reassign_bug/{{ bug.id }}"
+                          class="mt-1">
+
+                        <select
+                            name="developer"
+                            class="form-select form-select-sm">
+
+                            {% for dev in developers %}
+
+                            <option value="{{ dev.id }}"
+                                {% if bug.assigned_to_id == dev.id %}
+                                selected
+                                {% endif %}>
+
+                                {{ dev.username }}
+
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                        <button
+                            class="btn btn-warning btn-sm mt-1">
+
+                            Assign / Reassign
+
+                        </button>
+
+                    </form>
+
+                    {% endif %}
+
+                    <!-- TESTER -->
+
+                   {% if role == 'tester' %}
+
+    {% if bug.created_by_id == session['user_id'] %}
+
+    <a href="/edit_bug/{{ bug.id }}"
+       class="btn btn-primary btn-sm mb-1">
+        Edit
+    </a>
+
+    <a href="/delete_bug/{{ bug.id }}"
+       class="btn btn-danger btn-sm mb-1">
+        Delete
+    </a>
+
+    {% endif %}
+
+    {% if role == 'tester'
+      and bug.status|lower == 'resolved' %}
+
+    <a href="/verify_fix/{{ bug.id }}"
+       class="btn btn-success btn-sm mb-1">
+        Verify Fix
+    </a>
+
+    <a href="/reopen_bug/{{ bug.id }}"
+       class="btn btn-warning btn-sm mb-1">
+        Reopen
+    </a>
+
+    {% endif %}
+
+{% endif %}
+
+                    <!-- DEVELOPER -->
+
+                    {% if role == 'developer'
+                          and bug.assigned_to_id == session['user_id'] %}
+
+                        {% if bug.status|lower in
+                              ['open', 'in progress'] %}
+
+                        <a href="/update_status/{{ bug.id }}"
+                           class="btn btn-success btn-sm mb-1">
+                            Change Status
+                        </a>
+
+                        {% endif %}
+
+                        <form method="POST"
+                              action="/add_comment/{{ bug.id }}">
+
+                            <input
+                                type="text"
+                                name="comment"
+                                class="form-control form-control-sm mb-1"
+                                placeholder="Add comment"
+                                required
+                            >
+
+                            <button
+                                class="btn btn-info btn-sm">
+                                Comment
+                            </button>
+
+                        </form>
+
+                    {% endif %}
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+        
+        </tbody>
+
+    </table>
+
+</div>
+
+
+</div>
+
+{% endblock %}
+
+

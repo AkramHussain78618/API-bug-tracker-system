@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="row mb-4">
+    <div class="col">
+        <div class="card p-3">Total: {{ total_bugs }}</div>
+    </div>
+    <div class="col">
+        <div class="card p-3">Open: {{ open_bugs }}</div>
+    </div>
+    <div class="col">
+        <div class="card p-3">In Progress: {{ in_progress_bugs }}</div>
+    </div>
+    <div class="col">
+        <div class="card p-3">Resolved: {{ resolved_bugs }}</div>
+    </div>
+    <div class="col">
+        <div class="card p-3">Closed: {{ closed_bugs }}</div>
+    </div>
+</div>
+
+<div class="container mt-4">
+
+    <div class="card shadow">
+
+        <div class="card-body">
+
+            <h3 class="mb-4">
+                Create Bug
+            </h3>
+
+            <form method="POST">
+
+                <!-- TITLE -->
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Bug Title
+                    </label>
+
+                    <input
+                        type="text"
+                        name="title"
+                        class="form-control"
+                        required
+                    >
+
+                </div>
+
+                <!-- DESCRIPTION -->
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Description
+                    </label>
+
+                    <textarea
+                        name="description"
+                        class="form-control"
+                        rows="4"
+                        required
+                    ></textarea>
+
+                </div>
+
+                <!-- PRIORITY -->
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Priority
+                    </label>
+
+                    <select
+                        name="priority"
+                        class="form-select"
+                        required
+                    >
+
+                        <option value="">
+                            Select Priority
+                        </option>
+
+                        <option value="Low">
+                            Low
+                        </option>
+
+                        <option value="Medium">
+                            Medium
+                        </option>
+
+                        <option value="High">
+                            High
+                        </option>
+
+                        <option value="Critical">
+                            Critical
+                        </option>
+
+                    </select>
+
+                </div>
+                
+                <div class="mb-3">
+
+    <label class="form-label">
+        Bug Source
+    </label>
+
+    <select
+        name="bug_source"
+        class="form-select"
+        required
+    >
+
+        <option value="">Select Source</option>
+
+        <option value="Customer Complaint">Customer</option>
+    <option value="Internal Testing">Internal Testing</option>
+    <option value="QA Team">QA Team</option>
+    <option value="Client">Client</option>
+    <option value="Employee">Employee</option>
+
+    </select>
+
+</div>
+                <!-- ASSIGN TO -->
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Assign To
+                    </label>
+
+                    <select
+                        name="assign_to"
+                        class="form-select"
+                        required
+                    >
+
+                        <option value="">
+                            Choose Developer
+                        </option>
+
+                        {% for developer in developers %}
+
+                        <option value="{{ developer.id }}">
+
+                            {{ developer.username }}
+
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+                <!-- BUTTON -->
+
+                <button
+                    type="submit"
+                    class="btn btn-success"
+                >
+                    Create Bug
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
