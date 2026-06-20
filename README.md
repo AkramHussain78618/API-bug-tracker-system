@@ -8,7 +8,7 @@ This system improves debugging efficiency, enhances communication between teams,
 
 # Live Demo
 
-## https://api-bug-tracker-system-1y8l.onrender.com/
+## https://api-bug-tracker-system.onrender.com
 
 ## Features
 
