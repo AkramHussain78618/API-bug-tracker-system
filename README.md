@@ -8,10 +8,9 @@ This system improves debugging efficiency, enhances communication between teams,
 
 # Live Demo
 
-## https://api-bug-tracker-system.onrender.com
+##  https://api-bug-tracker-system.onrender.com
 
 ## Features
-
 
 ###  Authentication System
 - User Registration Page  
@@ -157,3 +156,8 @@ File upload support
 Aspiring Software Developer passionate about:
 
 Python Development | Web Technologies | AI Development | Artificial Intelligence
+
+
+#  GitHub Support
+
+If you like this project, give it a * on GitHub and support the repository.
